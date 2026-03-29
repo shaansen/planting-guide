@@ -1,0 +1,1791 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>8819 Raven Top Dr — Planting Calendar</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #fafaf7;
+        --card: #ffffff;
+        --text: #2c2a25;
+        --muted: #7a7768;
+        --border: #e8e5dc;
+        --accent: #4a6741;
+        --accent-light: #e8f0e4;
+        --amber: #b5841b;
+        --amber-light: #fdf5e6;
+        --amber-dark: #6b4f10;
+        --purple: #5b4ba7;
+        --purple-light: #eeecfb;
+        --teal: #1a7a5c;
+        --teal-light: #e2f4ed;
+        --coral: #c05a2c;
+        --coral-light: #fbf0ea;
+        --green-dark: #2d5a24;
+        --green-light: #e8f3e0;
+        --zone-a-bg: #fdf5e6;
+        --zone-a-text: #6b4f10;
+        --zone-a-border: #e8d5a8;
+        --zone-b-bg: #eeecfb;
+        --zone-b-text: #3e3280;
+        --zone-b-border: #cbc6f0;
+        --zone-c-bg: #e2f4ed;
+        --zone-c-text: #0e5940;
+        --zone-c-border: #a8dfc8;
+        --zone-d-bg: #fbf0ea;
+        --zone-d-text: #7a3518;
+        --zone-d-border: #f0c4a8;
+        --zone-e-bg: #e8f3e0;
+        --zone-e-text: #2d5a24;
+        --zone-e-border: #b8d8a4;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "DM Sans", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.65;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .page-header {
+        padding: 3rem 2rem 2rem;
+        max-width: 960px;
+        margin: 0 auto;
+      }
+
+      .page-header h1 {
+        font-family: "DM Serif Display", serif;
+        font-size: 2.4rem;
+        font-weight: 400;
+        letter-spacing: -0.02em;
+        color: var(--text);
+        margin-bottom: 0.4rem;
+      }
+
+      .page-header .subtitle {
+        font-size: 1rem;
+        color: var(--muted);
+      }
+
+      .page-header .address {
+        display: inline-block;
+        margin-top: 0.75rem;
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: var(--accent);
+        background: var(--accent-light);
+        padding: 4px 14px;
+        border-radius: 20px;
+      }
+
+      .content {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 0 2rem 4rem;
+      }
+
+      /* ── Lot Map ── */
+      .lot-section {
+        margin-bottom: 3rem;
+      }
+      .lot-section h2 {
+        font-family: "DM Serif Display", serif;
+        font-size: 1.5rem;
+        font-weight: 400;
+        margin-bottom: 1rem;
+        color: var(--text);
+      }
+
+      .lot-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 2rem;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .lot-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        align-items: start;
+      }
+
+      @media (max-width: 700px) {
+        .lot-grid {
+          grid-template-columns: 1fr;
+        }
+        .page-header h1 {
+          font-size: 1.8rem;
+        }
+      }
+
+      .lot-map-container {
+        position: relative;
+      }
+
+      .lot-map {
+        width: 100%;
+        aspect-ratio: 3/4;
+        position: relative;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        overflow: hidden;
+        background: var(--bg);
+      }
+
+      .lot-map .compass {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--muted);
+        text-align: center;
+        line-height: 1.3;
+      }
+
+      .lot-map .compass::after {
+        content: "";
+        display: block;
+        width: 1px;
+        height: 18px;
+        background: var(--muted);
+        margin: 2px auto 0;
+        opacity: 0.5;
+      }
+
+      .zone {
+        position: absolute;
+        border-radius: 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: 500;
+        cursor: pointer;
+        transition:
+          transform 0.15s,
+          box-shadow 0.15s;
+      }
+
+      .zone:hover {
+        transform: scale(1.03);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        z-index: 2;
+      }
+
+      .zone.active {
+        box-shadow: 0 0 0 2.5px var(--text);
+        z-index: 3;
+      }
+
+      .zone-name {
+        font-weight: 600;
+        font-size: 13px;
+      }
+      .zone-sub {
+        font-size: 10px;
+        opacity: 0.75;
+        margin-top: 1px;
+      }
+
+      .zone-a-map {
+        bottom: 4%;
+        left: 12%;
+        width: 76%;
+        height: 18%;
+        background: var(--zone-a-bg);
+        border: 1px solid var(--zone-a-border);
+        color: var(--zone-a-text);
+      }
+      .zone-b-map {
+        top: 30%;
+        left: 4%;
+        width: 14%;
+        height: 28%;
+        background: var(--zone-b-bg);
+        border: 1px solid var(--zone-b-border);
+        color: var(--zone-b-text);
+      }
+      .zone-c-map {
+        top: 30%;
+        right: 4%;
+        width: 14%;
+        height: 28%;
+        background: var(--zone-c-bg);
+        border: 1px solid var(--zone-c-border);
+        color: var(--zone-c-text);
+      }
+      .zone-d-map {
+        top: 4%;
+        left: 10%;
+        width: 80%;
+        height: 24%;
+        background: var(--zone-d-bg);
+        border: 1px solid var(--zone-d-border);
+        color: var(--zone-d-text);
+      }
+      .zone-e-map {
+        bottom: 2%;
+        right: 8%;
+        width: 22%;
+        height: 8%;
+        background: var(--zone-e-bg);
+        border: 1px solid var(--zone-e-border);
+        color: var(--zone-e-text);
+        font-size: 10px;
+      }
+
+      .house-box {
+        position: absolute;
+        top: 30%;
+        left: 20%;
+        width: 60%;
+        height: 28%;
+        background: var(--card);
+        border: 2px solid #b4b2a6;
+        border-radius: 8px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 500;
+        z-index: 1;
+      }
+
+      .house-box .house-sub {
+        font-size: 10px;
+        font-weight: 400;
+        opacity: 0.7;
+      }
+
+      .garage-box {
+        position: absolute;
+        top: 58%;
+        left: 20%;
+        width: 20%;
+        height: 8%;
+        background: var(--card);
+        border: 1.5px solid #c5c3b8;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 10px;
+        color: var(--muted);
+        z-index: 1;
+      }
+
+      .street-label {
+        position: absolute;
+        bottom: -4px;
+        left: 0;
+        right: 0;
+        text-align: center;
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--muted);
+        letter-spacing: 0.5px;
+      }
+
+      /* Zone legend */
+      .zone-legend {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .legend-item {
+        padding: 12px 14px;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: transform 0.1s;
+        border: 1px solid transparent;
+      }
+
+      .legend-item:hover {
+        transform: translateX(4px);
+      }
+      .legend-item.active {
+        border-color: var(--text);
+      }
+
+      .legend-item h3 {
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 2px;
+      }
+
+      .legend-item p {
+        font-size: 12px;
+        line-height: 1.45;
+        opacity: 0.8;
+      }
+
+      .la {
+        background: var(--zone-a-bg);
+        color: var(--zone-a-text);
+      }
+      .lb {
+        background: var(--zone-b-bg);
+        color: var(--zone-b-text);
+      }
+      .lc {
+        background: var(--zone-c-bg);
+        color: var(--zone-c-text);
+      }
+      .ld {
+        background: var(--zone-d-bg);
+        color: var(--zone-d-text);
+      }
+      .le {
+        background: var(--zone-e-bg);
+        color: var(--zone-e-text);
+      }
+
+      /* ── Calendar ── */
+      .calendar-section {
+        margin-top: 2.5rem;
+      }
+      .calendar-section h2 {
+        font-family: "DM Serif Display", serif;
+        font-size: 1.5rem;
+        font-weight: 400;
+        margin-bottom: 0.4rem;
+      }
+      .calendar-section .cal-subtitle {
+        font-size: 0.9rem;
+        color: var(--muted);
+        margin-bottom: 1.5rem;
+      }
+
+      .month-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        margin-bottom: 10px;
+        overflow: hidden;
+        transition: border-color 0.2s;
+      }
+
+      .month-card.expanded {
+        border-color: #b4b2a6;
+      }
+
+      .month-header {
+        padding: 16px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+        user-select: none;
+      }
+
+      .month-header:hover {
+        background: rgba(0, 0, 0, 0.015);
+      }
+
+      .month-name {
+        font-family: "DM Serif Display", serif;
+        font-size: 1.15rem;
+        font-weight: 400;
+      }
+
+      .month-badges {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+      }
+
+      .badge {
+        font-size: 11px;
+        font-weight: 600;
+        padding: 3px 12px;
+        border-radius: 20px;
+        letter-spacing: 0.02em;
+      }
+
+      .badge-now {
+        background: #d4e8d0;
+        color: #2d5a24;
+      }
+      .badge-prime {
+        background: var(--accent-light);
+        color: var(--accent);
+      }
+      .badge-maintain {
+        background: var(--amber-light);
+        color: var(--amber-dark);
+      }
+      .badge-prep {
+        background: var(--purple-light);
+        color: var(--purple);
+      }
+      .badge-rest {
+        background: #f0ede5;
+        color: var(--muted);
+      }
+
+      .chevron-icon {
+        width: 18px;
+        height: 18px;
+        transition: transform 0.25s;
+        color: var(--muted);
+      }
+
+      .month-card.expanded .chevron-icon {
+        transform: rotate(90deg);
+      }
+
+      .month-body {
+        display: none;
+        padding: 0 20px 20px;
+      }
+
+      .month-card.expanded .month-body {
+        display: block;
+      }
+
+      .month-intro {
+        font-size: 0.9rem;
+        color: var(--muted);
+        margin-bottom: 16px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--border);
+        line-height: 1.6;
+      }
+
+      .task-group {
+        margin-bottom: 14px;
+      }
+
+      .task-group-title {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .task-group-title .dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--accent);
+        flex-shrink: 0;
+      }
+
+      .plant-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 8px;
+      }
+
+      .plant-card {
+        padding: 10px 14px;
+        border-radius: 10px;
+        border: 1px solid var(--border);
+        background: var(--bg);
+        font-size: 13px;
+      }
+
+      .plant-card .plant-name {
+        font-weight: 600;
+        margin-bottom: 2px;
+        color: var(--text);
+      }
+
+      .plant-card .plant-detail {
+        font-size: 12px;
+        color: var(--muted);
+        line-height: 1.45;
+      }
+
+      .plant-card .zone-tags {
+        display: flex;
+        gap: 4px;
+        margin-top: 6px;
+        flex-wrap: wrap;
+      }
+
+      .ztag {
+        font-size: 10px;
+        font-weight: 600;
+        padding: 1px 8px;
+        border-radius: 10px;
+      }
+
+      .ztag-a {
+        background: var(--zone-a-bg);
+        color: var(--zone-a-text);
+      }
+      .ztag-b {
+        background: var(--zone-b-bg);
+        color: var(--zone-b-text);
+      }
+      .ztag-c {
+        background: var(--zone-c-bg);
+        color: var(--zone-c-text);
+      }
+      .ztag-d {
+        background: var(--zone-d-bg);
+        color: var(--zone-d-text);
+      }
+      .ztag-e {
+        background: var(--zone-e-bg);
+        color: var(--zone-e-text);
+      }
+
+      .care-note {
+        padding: 10px 14px;
+        border-radius: 10px;
+        background: var(--bg);
+        border-left: 3px solid var(--accent);
+        font-size: 13px;
+        color: var(--muted);
+        line-height: 1.55;
+        margin-top: 8px;
+      }
+
+      .care-note strong {
+        color: var(--text);
+        font-weight: 500;
+      }
+
+      .section-divider {
+        border: none;
+        border-top: 1px solid var(--border);
+        margin: 12px 0;
+      }
+
+      .frost-banner {
+        display: flex;
+        gap: 12px;
+        background: var(--accent-light);
+        border-radius: 12px;
+        padding: 14px 18px;
+        margin-bottom: 1.5rem;
+        align-items: flex-start;
+      }
+
+      .frost-banner .frost-icon {
+        width: 20px;
+        height: 20px;
+        flex-shrink: 0;
+        margin-top: 2px;
+        color: var(--accent);
+      }
+
+      .frost-banner p {
+        font-size: 13px;
+        color: var(--green-dark);
+        line-height: 1.55;
+      }
+
+      .frost-banner strong {
+        font-weight: 600;
+      }
+
+      .perennial-label {
+        font-size: 10px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--accent);
+        margin-bottom: 6px;
+      }
+
+      .annual-label {
+        font-size: 10px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--amber);
+        margin-bottom: 6px;
+      }
+
+      footer {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 0 2rem 3rem;
+        font-size: 12px;
+        color: var(--muted);
+      }
+    </style>
+  </head>
+  <body>
+    <header class="page-header">
+      <h1>Flower planting calendar</h1>
+      <p class="subtitle">
+        Zone 7b/8a month-by-month guide tailored to your lot
+      </p>
+      <span class="address">8819 Raven Top Dr, Mint Hill, NC 28227</span>
+    </header>
+
+    <div class="content">
+      <section class="lot-section">
+        <h2>Your lot &amp; sun exposure</h2>
+        <div class="lot-card">
+          <div class="lot-grid">
+            <div class="lot-map-container">
+              <div class="lot-map">
+                <div class="compass">N</div>
+                <div
+                  class="zone zone-d-map"
+                  data-zone="d"
+                  onclick="highlightZone('d')"
+                >
+                  <span class="zone-name">Zone D</span>
+                  <span class="zone-sub">Backyard &middot; 60&deg; NE</span>
+                </div>
+                <div
+                  class="zone zone-b-map"
+                  data-zone="b"
+                  onclick="highlightZone('b')"
+                >
+                  <span class="zone-name">B</span>
+                  <span class="zone-sub">NW</span>
+                </div>
+                <div class="house-box">
+                  <span>House</span>
+                  <span class="house-sub">~2,935 sq ft</span>
+                </div>
+                <div class="garage-box">Garage</div>
+                <div
+                  class="zone zone-c-map"
+                  data-zone="c"
+                  onclick="highlightZone('c')"
+                >
+                  <span class="zone-name">C</span>
+                  <span class="zone-sub">SE</span>
+                </div>
+                <div
+                  class="zone zone-a-map"
+                  data-zone="a"
+                  onclick="highlightZone('a')"
+                >
+                  <span class="zone-name">Zone A &mdash; Front yard</span>
+                  <span class="zone-sub">240&deg; SW &middot; full sun</span>
+                </div>
+                <div
+                  class="zone zone-e-map"
+                  data-zone="e"
+                  onclick="highlightZone('e')"
+                >
+                  <span class="zone-name">E</span>
+                </div>
+                <div class="street-label">Raven Top Dr</div>
+              </div>
+            </div>
+            <div class="zone-legend">
+              <div
+                class="legend-item la"
+                data-zone="a"
+                onclick="highlightZone('a')"
+              >
+                <h3>Zone A &mdash; Front yard</h3>
+                <p>
+                  240&deg; SW. Intense afternoon sun, 6&ndash;8+ hours. Hottest
+                  spot on the lot. Best for heat-loving, drought-tolerant
+                  flowers.
+                </p>
+              </div>
+              <div
+                class="legend-item lb"
+                data-zone="b"
+                onclick="highlightZone('b')"
+              >
+                <h3>Zone B &mdash; Left side yard</h3>
+                <p>
+                  330&deg; NW. Mostly shaded all day with late filtered light.
+                  Shade-tolerant plants only.
+                </p>
+              </div>
+              <div
+                class="legend-item lc"
+                data-zone="c"
+                onclick="highlightZone('c')"
+              >
+                <h3>Zone C &mdash; Right side yard</h3>
+                <p>
+                  150&deg; SE. Morning sun, afternoon shade. The sweet spot for
+                  hydrangeas and azaleas.
+                </p>
+              </div>
+              <div
+                class="legend-item ld"
+                data-zone="d"
+                onclick="highlightZone('d')"
+              >
+                <h3>Zone D &mdash; Backyard</h3>
+                <p>
+                  60&deg; NE. Gentle morning light only, shaded by house all
+                  afternoon. Great for a relaxing shade garden.
+                </p>
+              </div>
+              <div
+                class="legend-item le"
+                data-zone="e"
+                onclick="highlightZone('e')"
+              >
+                <h3>Zone E &mdash; Mailbox</h3>
+                <p>
+                  Full SW sun exposure. Small planting area near street. Tough,
+                  showy picks.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="calendar-section">
+        <h2>Month-by-month planting calendar</h2>
+        <p class="cal-subtitle">
+          Click each month to see what to plant and where. Perennials come back
+          every year; annuals give one season of color.
+        </p>
+
+        <div class="frost-banner">
+          <svg
+            class="frost-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              d="M12 2v20M2 12h20M4.93 4.93l14.14 14.14M19.07 4.93L4.93 19.07"
+            />
+          </svg>
+          <p>
+            <strong>Last spring frost:</strong> ~April 5 &nbsp;&middot;&nbsp;
+            <strong>First fall frost:</strong> ~late October<br />Tender annuals
+            go outdoors only after last frost. Perennials and shrubs can be
+            planted now.
+          </p>
+        </div>
+
+        <!-- MARCH -->
+        <div class="month-card expanded" id="month-mar">
+          <div class="month-header" onclick="toggleMonth('month-mar')">
+            <span class="month-name">March</span>
+            <div class="month-badges">
+              <span class="badge badge-now">Now</span>
+              <svg
+                class="chevron-icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M9 18l6-6-6-6" />
+              </svg>
+            </div>
+          </div>
+          <div class="month-body">
+            <p class="month-intro">
+              You're in the first prime planting window. Get perennials and
+              shrubs in the ground now so roots establish before summer heat.
+              Amend clay soil with 3&ndash;4 inches of compost before planting.
+              Get a free soil test from NC Cooperative Extension (Mecklenburg
+              County).
+            </p>
+            <div class="task-group">
+              <div class="perennial-label">
+                Perennials &amp; shrubs to plant
+              </div>
+              <div class="plant-cards">
+                <div class="plant-card">
+                  <div class="plant-name">Knockout roses</div>
+                  <div class="plant-detail">
+                    Heat-loving, bloom Apr&ndash;Nov. Prune to 18&Prime; in late
+                    Feb.
+                  </div>
+                  <div class="zone-tags">
+                    <span class="ztag ztag-a">A</span
+                    ><span class="ztag ztag-e">E</span>
+                  </div>
+                </div>
+                <div class="plant-card">
+                  <div class="plant-name">Coneflowers</div>
+                  <div class="plant-detail">
+                    Native, drought-tolerant. Purple or yellow daisy-like blooms
+                    Jun&ndash;Sep.
+                  </div>
+                  <div class="zone-tags">
+                    <span class="ztag ztag-a">A</span
+                    ><span class="ztag ztag-e">E</span>
+                  </div>
+                </div>
+                <div class="plant-card">
+                  <div class="plant-name">Black-eyed Susans</div>
+                  <div class="plant-detail">
+                    Bright yellow, nearly indestructible. Bloom Jul&ndash;Oct.
+                  </div>
+                  <div class="zone-tags">
+                    <span class="ztag ztag-a">A</span
+                    ><span class="ztag ztag-e">E</span>
+                  </div>
+                </div>
+                <div class="plant-card">
+                  <div class="plant-name">Daylilies</div>
+                  <div class="plant-detail">
+                    Many colors, bloom late spring through summer. Great
+                    front-of-bed.
+                  </div>
+                  <div class="zone-tags">
+                    <span class="ztag ztag-a">A</span
+                    ><span class="ztag ztag-c">C</span
+                    ><span class="ztag ztag-e">E</span>
+                  </div>
+                </div>
+                <div class="plant-card">
+                  <div class="plant-name">Hydrangeas</div>
+                  <div class="plant-detail">
+                    Endless Summer or oakleaf. Morning sun, afternoon shade.
+                    Bloom Jun&ndash;Sep.
+                  </div>
+                  <div class="zone-tags">
+                    <span class="ztag ztag-c">C</span
+                    ><span class="ztag ztag-d">D</span>
+                  </div>
+                </div>
+                <div class="plant-card">
+                  <div class="plant-name">Hostas</div>
+                  <div class="plant-detail">
+                    Bold foliage for shade. Many sizes and leaf colors. Low
+                    maintenance.
+                  </div>
+                  <div class="zone-tags">
+                    <span class="ztag ztag-b">B</span
+                    ><span class="ztag ztag-d">D</span>
+                  </div>
+                </div>
+                <div class="plant-card">
+                  <div class="plant-name">Heuchera (coral bells)</div>
+                  <div class="plant-detail">
+                    Colorful evergreen foliage. Tolerates shade well. Year-round
+                    interest.
+                  </div>
+                  <div class="zone-tags">
+                    <span class="ztag ztag-b">B</span
+                    ><span class="ztag ztag-c">C</span
+                    ><span class="ztag ztag-d">D</span>
+                  </div>
+                </div>
+                <div class="plant-card">
+                  <div class="plant-name">Bleeding hearts</div>
+                  <div class="plant-detail">
+                    Heart-shaped pink flowers in spring. Goes dormant in summer
+                    heat.
+                  </div>
+                  <div class="zone-tags">
+                    <span class="ztag ztag-b">B</span
+                    ><span class="ztag ztag-c">C</span>
+                  </div>
+                </div>
+                <div class="plant-card">
+                  <div class="plant-name">Christmas fern</div>
+                  <div class="plant-detail">
+                    Evergreen native fern. Thrives in deep shade, even dry shade
+                    under eaves.
+                  </div>
+                  <div class="zone-tags">
+                    <span class="ztag ztag-b">B</span
+                    ><span class="ztag ztag-d">D</span>
+                  </div>
+                </div>
+                <div class="plant-card">
+                  <div class="plant-name">Liriope (edging)</div>
+                  <div class="plant-detail">
+                    Evergreen grass-like border plant. Sun or shade. Divide and
+                    space 12&Prime; apart.
+                  </div>
+                  <div class="zone-tags">
+                    <span class="ztag ztag-a">A</span
+                    ><span class="ztag ztag-c">C</span>
+                  </div>
+                </div>
+                <div class="plant-card">
+                  <div class="plant-name">Crape myrtles</div>
+                  <div class="plant-detail">
+                    Dwarf varieties (Pocomoke, Acoma) for mailbox/corners.
+                    Summer blooms.
+                  </div>
+                  <div class="zone-tags">
+                    <span class="ztag ztag-a">A</span
+                    ><span class="ztag ztag-e">E</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="care-note">
+              <strong>Soil prep:</strong> Mix 3&ndash;4&Prime; of compost into
+              your clay soil. Lay 2&ndash;3&Prime; of hardwood mulch after
+              planting, keeping it 1&Prime; from stems.
+            </div>
+          </div>
+        </div>
+
+        <!-- APRIL -->
+        <div class="month-card" id="month-apr">
+          <div class="month-header" onclick="toggleMonth('month-apr')">
+            <span class="month-name">April</span>
+            <div class="month-badges">
+              <span class="badge badge-prime">Prime planting</span>
+              <svg
+                class="chevron-icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M9 18l6-6-6-6" />
+              </svg>
+            </div>
+          </div>
+          <div class="month-body">
+            <p class="month-intro">
+              After the last frost (~April 5), you can plant tender annuals
+              outdoors. Continue planting perennials and shrubs. Apply
+              slow-release 10-10-10 fertilizer to all beds.
+            </p>
+            <div class="task-group">
+              <div class="perennial-label">Perennials to plant</div>
+              <div class="plant-cards">
+                <div class="plant-card">
+                  <div class="plant-name">Bee balm</div>
+                  <div class="plant-detail">
+                    Red/pink tubular flowers. Attracts hummingbirds. Native.
+                  </div>
+                  <div class="zone-tags">
+                    <span class="ztag ztag-a">A</span
+                    ><span class="ztag ztag-d">D</span>
+                  </div>
+                </div>
+                <div class="plant-card">
+                  <div class="plant-name">Salvia</div>
+                  <div class="plant-detail">
+                    Spiky blue/purple blooms. Drought-tolerant, deer resistant.
+                  </div>
+                  <div class="zone-tags">
+                    <span class="ztag ztag-a">A</span
+                    ><span class="ztag ztag-e">E</span>
+                  </div>
+                </div>
+                <div class="plant-card">
+                  <div class="plant-name">Azaleas</div>
+                  <div class="plant-detail">
+                    Spring blooms in pink, white, coral. Love morning sun,
+                    acidic soil.
+                  </div>
+                  <div class="zone-tags">
+                    <span class="ztag ztag-c">C</span>
+                  </div>
+                </div>
+                <div class="plant-card">
+                  <div class="plant-name">Virginia sweetspire</div>
+                  <div class="plant-detail">
+                    Fragrant white flower spikes. Stunning red fall foliage.
+                    Native.
+                  </div>
+                  <div class="zone-tags">
+                    <span class="ztag ztag-d">D</span>
+                  </div>
+                </div>
+                <div class="plant-card">
+                  <div class="plant-name">Blanket flowers</div>
+                  <div class="plant-detail">
+                    Red/yellow daisy blooms all summer. Loves heat, poor soil.
+                  </div>
+                  <div class="zone-tags">
+                    <span class="ztag ztag-a">A</span
+                    ><span class="ztag ztag-e">E</span>
+                  </div>
+                </div>
+                <div class="plant-card">
+                  <div class="plant-name">Astilbe</div>
+                  <div class="plant-detail">
+                    Feathery pink/white plumes in shade. Moist soil preferred.
+                  </div>
+                  <div class="zone-tags">
+                    <span class="ztag ztag-b">B</span
+                    ><span class="ztag ztag-d">D</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <hr class="section-divider" />
+            <div class="task-group">
+              <div class="annual-label">Annuals to plant (after April 5)</div>
+              <div class="plant-cards">
+                <div class="plant-card">
+                  <div class="plant-name">Zinnias</div>
+                  <div class="plant-detail">
+                    Direct sow seeds. Non-stop color Jun&ndash;frost. Easy from
+                    seed.
+                  </div>
+                  <div class="zone-tags">
+                    <span class="ztag ztag-a">A</span
+                    ><span class="ztag ztag-e">E</span>
+                  </div>
+                </div>
+                <div class="plant-card">
+                  <div class="plant-name">Lantana</div>
+                  <div class="plant-detail">
+                    Multicolor clusters. Extreme heat &amp; drought tolerant.
+                    Butterflies love it.
+                  </div>
+                  <div class="zone-tags">
+                    <span class="ztag ztag-a">A</span
+                    ><span class="ztag ztag-e">E</span>
+                  </div>
+                </div>
+                <div class="plant-card">
+                  <div class="plant-name">Marigolds</div>
+                  <div class="plant-detail">
+                    Gold/orange mounds. Repels pests. Easy from transplants.
+                  </div>
+                  <div class="zone-tags">
+                    <span class="ztag ztag-a">A</span
+                    ><span class="ztag ztag-e">E</span>
+                  </div>
+                </div>
+                <div class="plant-card">
+                  <div class="plant-name">Impatiens</div>
+                  <div class="plant-detail">
+                    Shade annual workhorse. Continuous color in every shade
+                    zone.
+                  </div>
+                  <div class="zone-tags">
+                    <span class="ztag ztag-b">B</span
+                    ><span class="ztag ztag-d">D</span>
+                  </div>
+                </div>
+                <div class="plant-card">
+                  <div class="plant-name">Begonias</div>
+                  <div class="plant-detail">
+                    Waxy leaves, white/pink/red flowers. Part shade to shade.
+                  </div>
+                  <div class="zone-tags">
+                    <span class="ztag ztag-b">B</span
+                    ><span class="ztag ztag-c">C</span
+                    ><span class="ztag ztag-d">D</span>
+                  </div>
+                </div>
+                <div class="plant-card">
+                  <div class="plant-name">Caladiums</div>
+                  <div class="plant-detail">
+                    Dramatic red/pink/white foliage. Plant bulbs after soil
+                    warms.
+                  </div>
+                  <div class="zone-tags">
+                    <span class="ztag ztag-b">B</span
+                    ><span class="ztag ztag-d">D</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="care-note">
+              <strong>Mulch all beds</strong> with 2&ndash;3&Prime; of hardwood
+              mulch after planting. This retains moisture, suppresses weeds, and
+              improves your clay soil over time.
+            </div>
+          </div>
+        </div>
+
+        <!-- MAY -->
+        <div class="month-card" id="month-may">
+          <div class="month-header" onclick="toggleMonth('month-may')">
+            <span class="month-name">May</span>
+            <div class="month-badges">
+              <span class="badge badge-prime">Prime planting</span>
+              <svg
+                class="chevron-icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M9 18l6-6-6-6" />
+              </svg>
+            </div>
+          </div>
+          <div class="month-body">
+            <p class="month-intro">
+              Last good window to plant annuals and fill gaps. Everything should
+              be in the ground by end of May. Begin a consistent watering
+              schedule as temps climb.
+            </p>
+            <div class="task-group">
+              <div class="annual-label">Annuals to add</div>
+              <div class="plant-cards">
+                <div class="plant-card">
+                  <div class="plant-name">Sunflowers</div>
+                  <div class="plant-detail">
+                    Direct sow seeds along fences or back of beds. Dramatic
+                    height.
+                  </div>
+                  <div class="zone-tags">
+                    <span class="ztag ztag-a">A</span
+                    ><span class="ztag ztag-d">D</span>
+                  </div>
+                </div>
+                <div class="plant-card">
+                  <div class="plant-name">Pentas</div>
+                  <div class="plant-detail">
+                    Star-shaped clusters. Butterfly magnet. Full sun,
+                    heat-proof.
+                  </div>
+                  <div class="zone-tags">
+                    <span class="ztag ztag-a">A</span
+                    ><span class="ztag ztag-e">E</span>
+                  </div>
+                </div>
+                <div class="plant-card">
+                  <div class="plant-name">Coleus</div>
+                  <div class="plant-detail">
+                    Stunning foliage in dozens of colors. Shade to part shade.
+                  </div>
+                  <div class="zone-tags">
+                    <span class="ztag ztag-b">B</span
+                    ><span class="ztag ztag-c">C</span
+                    ><span class="ztag ztag-d">D</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="care-note">
+              <strong>Watering:</strong> All new plantings need ~1&Prime; per
+              week. Water deeply 2&ndash;3 times weekly, early morning. Avoid
+              wetting leaves on hydrangeas. Second hydrangea fertilizer
+              application (10-10-10).
+            </div>
+          </div>
+        </div>
+
+        <!-- JUNE -->
+        <div class="month-card" id="month-jun">
+          <div class="month-header" onclick="toggleMonth('month-jun')">
+            <span class="month-name">June</span>
+            <div class="month-badges">
+              <span class="badge badge-maintain">Maintain &amp; enjoy</span>
+              <svg
+                class="chevron-icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M9 18l6-6-6-6" />
+              </svg>
+            </div>
+          </div>
+          <div class="month-body">
+            <p class="month-intro">
+              Your garden is blooming. Focus shifts to deadheading, watering,
+              and pest patrol. Hydrangeas should be flowering in Zones C and D.
+            </p>
+            <div class="task-group">
+              <div class="task-group-title">
+                <span class="dot"></span>Deadhead spent blooms
+              </div>
+              <div class="plant-cards">
+                <div class="plant-card">
+                  <div class="plant-name">Knockout roses</div>
+                  <div class="plant-detail">
+                    Snip faded clusters. They&rsquo;ll rebloom within 5&ndash;6
+                    weeks.
+                  </div>
+                  <div class="zone-tags">
+                    <span class="ztag ztag-a">A</span>
+                  </div>
+                </div>
+                <div class="plant-card">
+                  <div class="plant-name">Coneflowers &amp; daylilies</div>
+                  <div class="plant-detail">
+                    Remove spent blooms to encourage continuous flowering.
+                  </div>
+                  <div class="zone-tags">
+                    <span class="ztag ztag-a">A</span
+                    ><span class="ztag ztag-c">C</span
+                    ><span class="ztag ztag-e">E</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="care-note">
+              <strong>Pest watch:</strong> Japanese beetles arrive mid-June.
+              Hand-pick or use neem oil on roses and coneflowers. Check
+              hydrangea leaves for leaf spot &mdash; water at root zone only.
+            </div>
+          </div>
+        </div>
+
+        <!-- JULY -->
+        <div class="month-card" id="month-jul">
+          <div class="month-header" onclick="toggleMonth('month-jul')">
+            <span class="month-name">July</span>
+            <div class="month-badges">
+              <span class="badge badge-maintain">Maintain &amp; enjoy</span>
+              <svg
+                class="chevron-icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M9 18l6-6-6-6" />
+              </svg>
+            </div>
+          </div>
+          <div class="month-body">
+            <p class="month-intro">
+              Peak summer heat. Keep watering, keep deadheading. Final hydrangea
+              feeding of the year. Cut back any leggy perennials by a third
+              &mdash; they&rsquo;ll push fresh growth and rebloom in late
+              summer.
+            </p>
+            <div class="care-note">
+              <strong>Final fertilizer:</strong> Apply 10-10-10 to hydrangeas
+              (last of the Mar/May/Jul schedule). Stop all fertilizing after
+              July &mdash; late feeding promotes tender growth that won&rsquo;t
+              harden before winter.
+            </div>
+            <div class="care-note" style="margin-top: 8px">
+              <strong>Water deeply:</strong> Charlotte July heat can be brutal.
+              New plantings need 1&ndash;2&Prime; per week. Mulch helps retain
+              moisture.
+            </div>
+          </div>
+        </div>
+
+        <!-- AUGUST -->
+        <div class="month-card" id="month-aug">
+          <div class="month-header" onclick="toggleMonth('month-aug')">
+            <span class="month-name">August</span>
+            <div class="month-badges">
+              <span class="badge badge-maintain">Maintain &amp; enjoy</span>
+              <svg
+                class="chevron-icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M9 18l6-6-6-6" />
+              </svg>
+            </div>
+          </div>
+          <div class="month-body">
+            <p class="month-intro">
+              Hottest, driest month. Don&rsquo;t let new plantings suffer. Start
+              planning fall additions and order spring-blooming bulbs from
+              catalogs &mdash; they ship in fall.
+            </p>
+            <div class="task-group">
+              <div class="annual-label">Replace tired annuals</div>
+              <div class="plant-cards">
+                <div class="plant-card">
+                  <div class="plant-name">Fresh lantana or zinnias</div>
+                  <div class="plant-detail">
+                    Swap out any exhausted marigolds or impatiens with fresh
+                    transplants.
+                  </div>
+                  <div class="zone-tags">
+                    <span class="ztag ztag-a">A</span
+                    ><span class="ztag ztag-e">E</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="care-note">
+              <strong>Order bulbs now:</strong> Daffodils, tulips, crocuses,
+              hyacinths. They&rsquo;ll arrive in September/October for fall
+              planting.
+            </div>
+          </div>
+        </div>
+
+        <!-- SEPTEMBER -->
+        <div class="month-card" id="month-sep">
+          <div class="month-header" onclick="toggleMonth('month-sep')">
+            <span class="month-name">September</span>
+            <div class="month-badges">
+              <span class="badge badge-prime">Fall planting</span>
+              <svg
+                class="chevron-icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M9 18l6-6-6-6" />
+              </svg>
+            </div>
+          </div>
+          <div class="month-body">
+            <p class="month-intro">
+              The second (and arguably best) planting window. Roots establish
+              through winter without heat stress. Fall is ideal for expanding
+              your perennial beds and adding shrubs.
+            </p>
+            <div class="task-group">
+              <div class="perennial-label">
+                Perennials &amp; shrubs to plant
+              </div>
+              <div class="plant-cards">
+                <div class="plant-card">
+                  <div class="plant-name">More coneflowers</div>
+                  <div class="plant-detail">
+                    Expand existing drifts or add new colors (white, orange
+                    varieties).
+                  </div>
+                  <div class="zone-tags">
+                    <span class="ztag ztag-a">A</span
+                    ><span class="ztag ztag-e">E</span>
+                  </div>
+                </div>
+                <div class="plant-card">
+                  <div class="plant-name">Black-eyed Susans</div>
+                  <div class="plant-detail">
+                    Fill gaps. They establish quickly in fall and spread
+                    naturally.
+                  </div>
+                  <div class="zone-tags">
+                    <span class="ztag ztag-a">A</span>
+                  </div>
+                </div>
+                <div class="plant-card">
+                  <div class="plant-name">Additional hydrangeas</div>
+                  <div class="plant-detail">
+                    Expand your hydrangea collection. Fall planting = stronger
+                    roots by spring.
+                  </div>
+                  <div class="zone-tags">
+                    <span class="ztag ztag-c">C</span
+                    ><span class="ztag ztag-d">D</span>
+                  </div>
+                </div>
+                <div class="plant-card">
+                  <div class="plant-name">Hostas &amp; heuchera</div>
+                  <div class="plant-detail">
+                    Divide existing clumps and replant, or add new varieties.
+                  </div>
+                  <div class="zone-tags">
+                    <span class="ztag ztag-b">B</span
+                    ><span class="ztag ztag-d">D</span>
+                  </div>
+                </div>
+                <div class="plant-card">
+                  <div class="plant-name">Ajuga (bugleweed)</div>
+                  <div class="plant-detail">
+                    Dense ground cover with blue flower spikes. Shade tolerant.
+                  </div>
+                  <div class="zone-tags">
+                    <span class="ztag ztag-b">B</span
+                    ><span class="ztag ztag-d">D</span>
+                  </div>
+                </div>
+                <div class="plant-card">
+                  <div class="plant-name">Foamflower (tiarella)</div>
+                  <div class="plant-detail">
+                    Native shade perennial. Delicate white flower spikes in
+                    spring.
+                  </div>
+                  <div class="zone-tags">
+                    <span class="ztag ztag-b">B</span
+                    ><span class="ztag ztag-d">D</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <hr class="section-divider" />
+            <div class="task-group">
+              <div class="annual-label">Fall annuals</div>
+              <div class="plant-cards">
+                <div class="plant-card">
+                  <div class="plant-name">Pansies &amp; violas</div>
+                  <div class="plant-detail">
+                    Cool-season champs. Bloom fall through spring in Mint
+                    Hill&rsquo;s mild winters.
+                  </div>
+                  <div class="zone-tags">
+                    <span class="ztag ztag-a">A</span
+                    ><span class="ztag ztag-b">B</span
+                    ><span class="ztag ztag-c">C</span
+                    ><span class="ztag ztag-d">D</span
+                    ><span class="ztag ztag-e">E</span>
+                  </div>
+                </div>
+                <div class="plant-card">
+                  <div class="plant-name">Mums</div>
+                  <div class="plant-detail">
+                    Classic fall color. Place in front beds for instant curb
+                    appeal.
+                  </div>
+                  <div class="zone-tags">
+                    <span class="ztag ztag-a">A</span
+                    ><span class="ztag ztag-e">E</span>
+                  </div>
+                </div>
+                <div class="plant-card">
+                  <div class="plant-name">Ornamental kale</div>
+                  <div class="plant-detail">
+                    Purple/white rosettes. Stunning texture alongside pansies.
+                  </div>
+                  <div class="zone-tags">
+                    <span class="ztag ztag-a">A</span
+                    ><span class="ztag ztag-c">C</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="care-note">
+              <strong>Divide perennials:</strong> Dig up overgrown hostas,
+              daylilies, and liriope. Split clumps and replant in new spots or
+              share with neighbors.
+            </div>
+          </div>
+        </div>
+
+        <!-- OCTOBER -->
+        <div class="month-card" id="month-oct">
+          <div class="month-header" onclick="toggleMonth('month-oct')">
+            <span class="month-name">October</span>
+            <div class="month-badges">
+              <span class="badge badge-prime">Fall planting</span>
+              <svg
+                class="chevron-icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M9 18l6-6-6-6" />
+              </svg>
+            </div>
+          </div>
+          <div class="month-body">
+            <p class="month-intro">
+              The big bulb planting month. Everything you plant now will be your
+              first burst of spring color. Last good window for perennial shrubs
+              too.
+            </p>
+            <div class="task-group">
+              <div class="perennial-label">Spring-blooming bulbs to plant</div>
+              <div class="plant-cards">
+                <div class="plant-card">
+                  <div class="plant-name">Daffodils</div>
+                  <div class="plant-detail">
+                    Plant 6&ndash;8&Prime; deep. Clusters of 5&ndash;7.
+                    Naturalize and return every year. Deer-proof.
+                  </div>
+                  <div class="zone-tags">
+                    <span class="ztag ztag-a">A</span
+                    ><span class="ztag ztag-c">C</span
+                    ><span class="ztag ztag-e">E</span>
+                  </div>
+                </div>
+                <div class="plant-card">
+                  <div class="plant-name">Tulips</div>
+                  <div class="plant-detail">
+                    Plant 6&ndash;8&Prime; deep. Many colors. Treat as annuals
+                    in Zone 7b &mdash; may not reliably return.
+                  </div>
+                  <div class="zone-tags">
+                    <span class="ztag ztag-a">A</span
+                    ><span class="ztag ztag-c">C</span>
+                  </div>
+                </div>
+                <div class="plant-card">
+                  <div class="plant-name">Crocuses</div>
+                  <div class="plant-detail">
+                    First flowers of spring. Plant 3&ndash;4&Prime; deep in
+                    drifts. Tiny but cheerful.
+                  </div>
+                  <div class="zone-tags">
+                    <span class="ztag ztag-a">A</span
+                    ><span class="ztag ztag-c">C</span
+                    ><span class="ztag ztag-e">E</span>
+                  </div>
+                </div>
+                <div class="plant-card">
+                  <div class="plant-name">Hyacinths</div>
+                  <div class="plant-detail">
+                    Intensely fragrant. Plant 6&Prime; deep. Blue, pink, or
+                    white.
+                  </div>
+                  <div class="zone-tags">
+                    <span class="ztag ztag-a">A</span
+                    ><span class="ztag ztag-c">C</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="care-note">
+              <strong>Refresh mulch</strong> to 2&ndash;3&Prime; before winter.
+              This insulates roots and keeps soil temperature stable through
+              freeze/thaw cycles.
+            </div>
+          </div>
+        </div>
+
+        <!-- NOVEMBER -->
+        <div class="month-card" id="month-nov">
+          <div class="month-header" onclick="toggleMonth('month-nov')">
+            <span class="month-name">November</span>
+            <div class="month-badges">
+              <span class="badge badge-rest">Wind down</span>
+              <svg
+                class="chevron-icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M9 18l6-6-6-6" />
+              </svg>
+            </div>
+          </div>
+          <div class="month-body">
+            <p class="month-intro">
+              Clean up spent summer annuals and add them to compost. Leave
+              perennial seed heads standing &mdash; coneflower and black-eyed
+              Susan seed heads feed goldfinches through winter.
+            </p>
+            <div class="task-group">
+              <div class="perennial-label">Last bulb window</div>
+              <div class="plant-cards">
+                <div class="plant-card">
+                  <div class="plant-name">Daffodils &amp; crocuses</div>
+                  <div class="plant-detail">
+                    You can still plant spring bulbs through late November in
+                    Mint Hill.
+                  </div>
+                  <div class="zone-tags">
+                    <span class="ztag ztag-a">A</span
+                    ><span class="ztag ztag-c">C</span
+                    ><span class="ztag ztag-e">E</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="care-note">
+              <strong>Leave the seed heads:</strong> Don&rsquo;t cut back
+              coneflowers, black-eyed Susans, or bee balm stalks. Their seed
+              heads are winter food for songbirds.
+            </div>
+          </div>
+        </div>
+
+        <!-- DEC-JAN -->
+        <div class="month-card" id="month-dec">
+          <div class="month-header" onclick="toggleMonth('month-dec')">
+            <span class="month-name">December &ndash; January</span>
+            <div class="month-badges">
+              <span class="badge badge-rest">Rest &amp; plan</span>
+              <svg
+                class="chevron-icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M9 18l6-6-6-6" />
+              </svg>
+            </div>
+          </div>
+          <div class="month-body">
+            <p class="month-intro">
+              Your pansies and violas keep blooming through mild Mint Hill
+              winters. Enjoy them. This is planning season.
+            </p>
+            <div class="task-group">
+              <div class="task-group-title">
+                <span class="dot"></span>Winter tasks
+              </div>
+              <div class="plant-cards">
+                <div class="plant-card">
+                  <div class="plant-name">Enjoy winter color</div>
+                  <div class="plant-detail">
+                    Pansies, violas, and ornamental kale keep beds alive.
+                    Christmas fern stays green.
+                  </div>
+                  <div class="zone-tags">
+                    <span class="ztag ztag-a">A</span
+                    ><span class="ztag ztag-b">B</span
+                    ><span class="ztag ztag-c">C</span>
+                  </div>
+                </div>
+                <div class="plant-card">
+                  <div class="plant-name">Plan &amp; order seeds</div>
+                  <div class="plant-detail">
+                    Browse catalogs. Order zinnia, sunflower, and marigold seeds
+                    for Feb indoor starts.
+                  </div>
+                  <div class="zone-tags"></div>
+                </div>
+                <div class="plant-card">
+                  <div class="plant-name">Take notes</div>
+                  <div class="plant-detail">
+                    Record what worked and what didn&rsquo;t. Note which zones
+                    need more plants next year.
+                  </div>
+                  <div class="zone-tags"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- FEBRUARY -->
+        <div class="month-card" id="month-feb">
+          <div class="month-header" onclick="toggleMonth('month-feb')">
+            <span class="month-name">February</span>
+            <div class="month-badges">
+              <span class="badge badge-prep">Early prep</span>
+              <svg
+                class="chevron-icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M9 18l6-6-6-6" />
+              </svg>
+            </div>
+          </div>
+          <div class="month-body">
+            <p class="month-intro">
+              Wake-up month. Prune roses, cut back dead perennial foliage, prep
+              beds with fresh compost. Start seeds indoors 4&ndash;6 weeks
+              before last frost (~April 5).
+            </p>
+            <div class="task-group">
+              <div class="task-group-title">
+                <span class="dot"></span>Pruning &amp; prep
+              </div>
+              <div class="plant-cards">
+                <div class="plant-card">
+                  <div class="plant-name">Prune Knockout roses</div>
+                  <div class="plant-detail">
+                    Late Feb. Cut back to 12&ndash;18&Prime;. Remove
+                    dead/crossing branches.
+                  </div>
+                  <div class="zone-tags">
+                    <span class="ztag ztag-a">A</span>
+                  </div>
+                </div>
+                <div class="plant-card">
+                  <div class="plant-name">Cut back perennials</div>
+                  <div class="plant-detail">
+                    Trim dead foliage from daylilies, hostas, liriope,
+                    coneflowers. New growth comes soon.
+                  </div>
+                  <div class="zone-tags">
+                    <span class="ztag ztag-a">A</span
+                    ><span class="ztag ztag-b">B</span
+                    ><span class="ztag ztag-c">C</span
+                    ><span class="ztag ztag-d">D</span>
+                  </div>
+                </div>
+                <div class="plant-card">
+                  <div class="plant-name">Prep beds</div>
+                  <div class="plant-detail">
+                    Turn in fresh compost. Edge beds. Get ready for March
+                    planting.
+                  </div>
+                  <div class="zone-tags">
+                    <span class="ztag ztag-a">A</span
+                    ><span class="ztag ztag-b">B</span
+                    ><span class="ztag ztag-c">C</span
+                    ><span class="ztag ztag-d">D</span
+                    ><span class="ztag ztag-e">E</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <hr class="section-divider" />
+            <div class="task-group">
+              <div class="annual-label">Start seeds indoors</div>
+              <div class="plant-cards">
+                <div class="plant-card">
+                  <div class="plant-name">Zinnias &amp; marigolds</div>
+                  <div class="plant-detail">
+                    Start in pots indoors. Transplant outdoors after April 5.
+                  </div>
+                  <div class="zone-tags">
+                    <span class="ztag ztag-a">A</span
+                    ><span class="ztag ztag-e">E</span>
+                  </div>
+                </div>
+                <div class="plant-card">
+                  <div class="plant-name">Sunflowers</div>
+                  <div class="plant-detail">
+                    Start in peat pots (they don&rsquo;t like root disturbance).
+                  </div>
+                  <div class="zone-tags">
+                    <span class="ztag ztag-a">A</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="care-note">
+              <strong>Don&rsquo;t prune hydrangeas</strong> &mdash; oakleaf and
+              Endless Summer bloom on old wood. Cutting now removes this
+              year&rsquo;s flower buds. Only remove clearly dead branches.
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <footer>
+      <p>
+        Planting calendar for 8819 Raven Top Dr, Mint Hill, NC 28227 &middot;
+        USDA Zone 7b/8a &middot; Summerwood subdivision &middot; 0.39 acres
+      </p>
+    </footer>
+
+    <script>
+      function toggleMonth(id) {
+        const el = document.getElementById(id);
+        const wasExpanded = el.classList.contains("expanded");
+        document
+          .querySelectorAll(".month-card")
+          .forEach((c) => c.classList.remove("expanded"));
+        if (!wasExpanded) el.classList.add("expanded");
+      }
+
+      function highlightZone(z) {
+        document
+          .querySelectorAll(".zone, .legend-item")
+          .forEach((el) => el.classList.remove("active"));
+        document
+          .querySelectorAll(`[data-zone="${z}"]`)
+          .forEach((el) => el.classList.add("active"));
+      }
+    </script>
+  </body>
+</html>
